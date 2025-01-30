@@ -1,2 +1,2 @@
 # MsRulesEngine
-https://medium.com/@vamsidogiparthi/building-a-json-rules-engine-from-scratch-with-msrulesengine-a1ee6b443c24
+https://medium.com/@vamsidogiparthi/implementing-ms-rules-engine-with-sqlite-db-efcore-part-2-4712c1414040
