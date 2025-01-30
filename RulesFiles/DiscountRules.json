@@ -1,0 +1,21 @@
+[
+  {
+    "WorkflowName": "GameDiscount",
+    "Rules": [
+      {
+        "RuleName": "AwardDiscount5",      
+        "ErrorMessage": "The game doesn't meet the criteria for 5% discount", 
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input1.Genre == \"Sports\" AND input1.Platform == \"PlayStation\""
+      },
+      {
+        "RuleName": "GiveDiscount15",          
+        "ErrorMessage": "The game doesn't meet the criteria for 15% discount", 
+        "ErrorType": "Error",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input1.Genre == \"Action\" AND input1.Platform == \"PlayStation\" AND input1.GamingStudio == \"Sony\""
+      }
+    ]
+  }
+]
