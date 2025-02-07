@@ -1,0 +1,39 @@
+[
+    {
+      "WorkflowName": "RestockingRules",
+      "Rules": [
+        {
+          "RuleName": "ActionPlaysationGameRestock1",      
+          "ErrorMessage": "The action game stocks for the playstation are low. Restock by 5 units", 
+          "ErrorType": "Error",
+          "SuccessEvent": "5",
+          "RuleExpressionType": "LambdaExpression",
+          "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) < 5",
+          "Actions": {
+            "OnSuccess": {
+              "Name": "OutputExpression",
+              "Context": {
+                "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) * 5"
+              }
+            }
+          }
+        },
+        {
+          "RuleName": "RPGXboxGameRestock1",          
+          "ErrorMessage": "The RPG game stocks for the Xbox are low. Restock by 10 units",
+          "ErrorType": "Error",
+          "RuleExpressionType": "LambdaExpression",
+          "SuccessEvent": "10",
+          "Expression": "input1.Where(x => x.Genre == \"RPG\" AND x.Platform == \"Xbox\").Sum(x => x.Quantity) < 10",
+          "Actions": {
+            "OnSuccess": {
+              "Name": "OutputExpression",
+              "Context": {
+                "Expression": "input1.Where(x => x.Genre == \"RPG\" AND x.Platform == \"Xbox\").Sum(x => x.Quantity) * 10"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]

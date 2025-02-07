@@ -6,4 +6,5 @@ public class Game {
     public string Platform { get; set; } = string.Empty;    
     public string GamingStudio { get; set; } = string.Empty;
     public decimal Price { get; set; }
+    public int Quantity { get; set; }
 }
