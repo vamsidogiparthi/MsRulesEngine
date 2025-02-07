@@ -1,0 +1,37 @@
+[
+  {
+    "WorkflowName": "EvaluateRuleActionTest",
+    "Rules": [
+      {
+        "RuleName": "TotalAmount5W",
+        "Expression": "input1 + input2 >= 50000",
+        "ErrorMessage": "The game doesn't meet the criteria for 5% discount",
+        "ErrorType": "Error",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "EvaluateRule",
+            "Context": {
+              "workflowName": "EvaluateRuleActionTest",
+              "ruleName": "TotalAmount10W",
+              "additionalInputs": [
+                { "Name": "TotalAmount", "Expression": "input1 + input2" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "RuleName": "TotalAmount10W",
+        "Expression": "TotalAmount >= 100000",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OutputExpression",
+            "Context": {
+              "Expression": "TotalAmount * 0.10"
+            }
+          }
+        }
+      }
+    ]
+  }
+]

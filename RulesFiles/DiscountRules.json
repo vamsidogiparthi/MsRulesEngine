@@ -6,15 +6,40 @@
         "RuleName": "AwardDiscount5",      
         "ErrorMessage": "The game doesn't meet the criteria for 5% discount", 
         "ErrorType": "Error",
+        "SuccessEvent": "5",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "input1.Genre == \"Sports\" AND input1.Platform == \"PlayStation\""
+        "Expression": "input1.Genre == \"Sports\" AND input1.Platform == \"PlayStation\"",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OutputExpression",
+            "Context": {
+              "Expression": "input1.Price * 0.05"
+            }
+          },
+          "OnFailure": {
+            "Name": "OutputExpression",
+            "Context": {
+              "Expression": "input1.Price"
+            }
+          }
+        }
       },
       {
         "RuleName": "GiveDiscount15",          
         "ErrorMessage": "The game doesn't meet the criteria for 15% discount", 
         "ErrorType": "Error",
         "RuleExpressionType": "LambdaExpression",
-        "Expression": "input1.Genre == \"Action\" AND input1.Platform == \"PlayStation\" AND input1.GamingStudio == \"Sony\""
+        "SuccessEvent": "20",
+        "Expression": "input1.Genre == \"Action\" AND input1.Platform == \"PlayStation\" AND input1.GamingStudio == \"Sony\"",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OutputExpression",
+            "Context": {
+              "Expression": "input1.Price * 0.20",
+              "CustomMessage": "The game meets the criteria for 20% discount"
+            }
+          }
+        }
       }
     ]
   }
