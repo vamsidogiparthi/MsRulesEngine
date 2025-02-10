@@ -1,0 +1,46 @@
+[
+  {
+    "WorkflowName": "RestockingChainRules",
+    "Rules": [
+      {
+        "RuleName": "ActionPlaystationGameRestock1",
+        "ErrorMessage": "The action game stocks for the playstation are low. Restock by 5 units",
+        "ErrorType": "Error",
+        "SuccessEvent": "5",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) < 5",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OutputExpression",
+            "Context": {
+              "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) * 5"
+            }
+          },
+          "OnFailure": {
+            "Name": "EvaluateRule",
+            "Context": {
+              "workflowName": "RestockingChainRules",
+              "ruleName": "ActionPlaystationGameRestock2"
+            }
+          }
+        }
+      },
+      {
+        "RuleName": "ActionPlaystationGameRestock2",
+        "ErrorMessage": "The action game stocks for the playstation are low. Restock by 10 units",
+        "ErrorType": "Error",
+        "SuccessEvent": "10",
+        "RuleExpressionType": "LambdaExpression",
+        "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) < 10",
+        "Actions": {
+          "OnSuccess": {
+            "Name": "OutputExpression",
+            "Context": {
+              "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) * 10"
+            }
+          }
+        }
+      }
+    ]
+  }
+]
