@@ -4,4 +4,5 @@ using MsRulesEngine;
 
 //await SimpleDiscountRules.Run();
 //await RestockingRulesExample.Run();
-await RestockingChainRulesExample.Run();
+//await RestockingChainRulesExample.Run();
+await RestockingChainNestedRulesExample.Run();

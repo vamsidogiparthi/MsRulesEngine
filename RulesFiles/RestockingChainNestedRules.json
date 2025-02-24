@@ -1,0 +1,48 @@
+[
+  {
+    "WorkflowName": "RestockingChainNestedRules",
+    "Rules": [
+      {
+        "RuleName": "ActionPlaystationGameRestock1",
+        "ErrorMessage": "The action game stocks for the playstation are low. Restock by 5 units",
+        "ErrorType": "Error",
+        "SuccessEvent": "5",
+        "RuleExpressionType": "LambdaExpression",
+        "Operator": "Or",
+        "Rules" : [
+          {
+            "RuleName": "ActionPlaystationGameRestock1_sony",
+            "ErrorMessage": "The action game stocks for the playstation are low. Restock by 5 units",
+            "ErrorType": "Error",
+            "RuleExpressionType": "LambdaExpression",
+            "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Sony\").Sum(x => x.Quantity) < 5",
+            "Actions": {
+              "OnSuccess": {
+                "Name": "OutputExpression",
+                "Context": {
+                  "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Sony\").Sum(x => x.Quantity) * 5"
+                }
+              }
+            }
+          },
+          {
+            "RuleName": "ActionPlaystationGameRestock1_nonsony",
+            "ErrorMessage": "The action game stocks for the playstation are low. Restock by 10 units",
+            "ErrorType": "Error",
+            "RuleExpressionType": "LambdaExpression",          
+            "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Microsoft\").Sum(x => x.Quantity) < 5",
+            "Actions": {
+              "OnSuccess": {
+                "Name": "OutputExpression",
+                "Context": {
+                  "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) * 5"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+ 
