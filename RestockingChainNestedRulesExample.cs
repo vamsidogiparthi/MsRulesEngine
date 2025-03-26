@@ -1,62 +1,79 @@
 using RE = RulesEngine;
 
 namespace MsRulesEngine;
+
 public class RestockingChainNestedRulesExample
 {
     public static async Task Run()
     {
-
-        string filePath = Path.Combine(Environment.CurrentDirectory, "RulesFiles", "RestockingChainNestedRules.json");
+        string filePath = Path.Combine(
+            Environment.CurrentDirectory,
+            "RulesFiles",
+            "RestockingChainNestedRules.json"
+        );
         Console.WriteLine(filePath);
         string jsonString = File.ReadAllText(filePath);
 
         var workflows = JsonSerializer.Deserialize<Workflow[]>(jsonString);
 
-
         var gamesInventory = new List<Game>
         {
-            new() {
+            new()
+            {
                 Title = "Halo",
                 Genre = "Action",
                 Id = 1,
                 Platform = "PlayStation",
                 GamingStudio = "Sony",
                 Price = 59.99m,
-                Quantity = 3
+                Quantity = 3,
             },
-            new() {
+            new()
+            {
                 Title = "Yakuza",
                 Genre = "Action",
                 Id = 2,
                 Platform = "PlayStation",
                 GamingStudio = "EA",
                 Price = 49.99m,
-                Quantity = 10
+                Quantity = 10,
             },
         };
 
-        var ruleParameters = new RuleParameter[] {
-        new ("input1", gamesInventory),
-      };
+        var ruleParameters = new RuleParameter[] { new("input1", gamesInventory) };
 
         var settings = new ReSettings
         {
-            NestedRuleExecutionMode = NestedRuleExecutionMode.Performance
+            NestedRuleExecutionMode = NestedRuleExecutionMode.Performance,
         };
 
         RE.RulesEngine rulesEngine = new(workflows, settings);
 
-        var resultList = await rulesEngine.ExecuteAllRulesAsync("RestockingChainNestedRules", ruleParameters);
-
+        var resultList = await rulesEngine.ExecuteAllRulesAsync(
+            "RestockingChainNestedRules",
+            ruleParameters
+        );
 
         foreach (var result in resultList)
         {
-            Console.WriteLine($"Rule: {result.Rule.RuleName}, Result: {result.IsSuccess}, Message: {result.ExceptionMessage}");
+            Console.WriteLine(
+                $"Rule: {result.Rule.RuleName}, Result: {result.IsSuccess}, Message: {result.ExceptionMessage}"
+            );
             if (result.ActionResult != null)
             {
-                Console.WriteLine($"Action Result: {result.ActionResult.Output}");
+                Console.WriteLine($"Parent Action Result: {result.ActionResult.Output}");
+            }
+
+            if (result.ChildResults != null && result.ChildResults.Any(c => c.ActionResult != null))
+            {
+                foreach (var childResult in result.ChildResults)
+                {
+                    Console.WriteLine(
+                        $"Child Rule: {childResult.Rule.RuleName}, Result: {childResult.IsSuccess}, Message: {childResult.ExceptionMessage}"
+                    );
+                    Console.WriteLine($"Child Action Result: {childResult.ActionResult.Output}");
+                }
             }
         }
     }
-
 }
