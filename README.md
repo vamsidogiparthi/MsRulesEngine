@@ -1,2 +1,2 @@
 # MsRulesEngine
-https://medium.com/@vamsidogiparthi/understanding-ms-rules-engine-nested-rules-part-5-36439b25291c
+https://medium.com/@vamsidogiparthi/understanding-ms-rules-engine-with-action-nested-rules-part-6-a19e689c846a
