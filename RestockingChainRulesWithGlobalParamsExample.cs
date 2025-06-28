@@ -1,15 +1,16 @@
+using RulesEngine.Extensions;
 using RE = RulesEngine;
 
 namespace MsRulesEngine;
 
-public class RestockingChainNestedRulesExample
+public class RestockingChainRulesWithGlobalParamsExample
 {
     public static async Task Run()
     {
         string filePath = Path.Combine(
             Environment.CurrentDirectory,
             "RulesFiles",
-            "RestockingChainNestedRules.json"
+            "RestockingChainRulesWithGlobalParams.json"
         );
         Console.WriteLine(filePath);
         string jsonString = File.ReadAllText(filePath);
@@ -50,19 +51,32 @@ public class RestockingChainNestedRulesExample
         RE.RulesEngine rulesEngine = new(workflows, settings);
 
         var resultList = await rulesEngine.ExecuteAllRulesAsync(
-            "RestockingChainNestedRules",
+            "RestockingChainRulesWithGlobalParams",
             ruleParameters
         );
 
-        foreach (var result in resultList)
-        {
-            Console.WriteLine(
-                $"Rule: {result.Rule.RuleName}, Result: {result.IsSuccess}, Message: {result.ExceptionMessage}"
-            );
-            if (result.ActionResult != null)
+        resultList.OnSuccess(
+            (successevent) =>
             {
-                Console.WriteLine($"Action Result: {result.ActionResult.Output}");
+                var successRuleResult = resultList.Where(x =>
+                    x.IsSuccess & x.Rule.RuleName == successevent
+                );
+
+                foreach (var result in successRuleResult)
+                {
+                    Console.WriteLine($"Parent Success Event: {result.ActionResult?.Output}");
+                }
+                foreach (var result in successRuleResult.SelectMany(x => x.ChildResults))
+                {
+                    Console.WriteLine(
+                        $"Child Rule: {result.Rule.RuleName}, Result: {result.IsSuccess}, Message: {result.ExceptionMessage}"
+                    );
+                    if (result.ActionResult != null)
+                    {
+                        Console.WriteLine($"Child Action Result: {result.ActionResult.Output}");
+                    }
+                }
             }
-        }
+        );
     }
 }

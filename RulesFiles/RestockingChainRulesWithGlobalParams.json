@@ -1,12 +1,29 @@
 [
   {
-    "WorkflowName": "RestockingChainNestedRules",
+    "WorkflowName": "RestockingChainRulesWithGlobalParams",
+    "GlobalParams": [
+      {
+        "Name": "SonyGameStockThreshold",
+        "Expression": "5"
+      },
+      {
+        "Name": "NonSonyGameStockThreshold",
+        "Expression": "10"
+      },
+      {
+        "Name": "SonyGameRestockMultiplier",
+        "Expression": "5"
+      },
+      {
+        "Name": "NonSonyGameRestockMultiplier",
+        "Expression": "3"
+      }       
+    ],
     "Rules": [
       {
         "RuleName": "ActionPlaystationGameRestock1",
         "ErrorMessage": "The action game stocks for the playstation are low. Restock by 5 units",
         "ErrorType": "Error",
-        "SuccessEvent": "5",
         "RuleExpressionType": "LambdaExpression",
         "Operator": "Or",
         "Rules" : [
@@ -15,12 +32,12 @@
             "ErrorMessage": "The action game stocks for the playstation are low. Restock by 5 units",
             "ErrorType": "Error",
             "RuleExpressionType": "LambdaExpression",
-            "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Sony\").Sum(x => x.Quantity) < 5",
+            "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Sony\").Sum(x => x.Quantity) < SonyGameStockThreshold",
             "Actions": {
               "OnSuccess": {
                 "Name": "OutputExpression",
                 "Context": {
-                  "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Sony\").Sum(x => x.Quantity) * 5"
+                  "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Sony\").Sum(x => x.Quantity) * SonyGameRestockMultiplier"
                 }
               }
             }
@@ -30,12 +47,12 @@
             "ErrorMessage": "The action game stocks for the playstation are low. Restock by 10 units",
             "ErrorType": "Error",
             "RuleExpressionType": "LambdaExpression",          
-            "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Microsoft\").Sum(x => x.Quantity) < 5",
+            "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\" AND x.GamingStudio == \"Microsoft\").Sum(x => x.Quantity) < NonSonyGameStockThreshold",
             "Actions": {
               "OnSuccess": {
                 "Name": "OutputExpression",
                 "Context": {
-                  "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) * 5"
+                  "Expression": "input1.Where(x => x.Genre == \"Action\" AND x.Platform == \"PlayStation\").Sum(x => x.Quantity) * NonSonyGameRestockMultiplier"
                 }
               }
             }
